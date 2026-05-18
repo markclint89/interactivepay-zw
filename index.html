@@ -802,9 +802,15 @@
         display: inline-block; max-width: calc(100vw - 40px);
       }
       .hero-wallets {
-        justify-content: flex-start;
-        padding-left: 2px;
-        margin-left: 0; margin-right: 0;
+        flex-wrap: wrap;
+        justify-content: center;
+        overflow-x: visible;
+        gap: 7px;
+      }
+      .wallet-pill {
+        font-size: 10px;
+        padding: 5px 10px;
+        gap: 5px;
       }
       .hero-cta { width: 100%; }
       .hero-cta-row { flex-direction: column; width: 100%; gap: 10px; }
