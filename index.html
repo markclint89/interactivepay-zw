@@ -27,602 +27,764 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --teal:       #00C4A7;
+      --teal:       #00D4B4;
       --teal-dark:  #00A88C;
-      --teal-light: #d0f7f0;
-      --navy:       #0A1F2E;
-      --navy-mid:   #132d3f;
-      /* Zimbabwe accent palette */
-      --zim-gold:   #E8A800;
+      --teal-glow:  rgba(0,212,180,0.25);
+      --navy:       #080F1A;
+      --navy-mid:   #0D1E30;
+      --navy-light: #132d3f;
+      --zim-gold:   #FFB800;
       --zim-green:  #1A6B2A;
       --zim-red:    #C8272A;
-      --zim-gold-light: #fef9e7;
-      /* Backgrounds */
-      --cream:      #FFF8ED;
-      --warm-pale:  #FFFBF3;
-      --green-pale: #ecfdf5;
-      /* Text */
+      --cream:      #F8F4EE;
+      --warm:       #FFFBF3;
       --text-main:  #0A1F2E;
-      --text-muted: #4b5563;
+      --text-muted: #5a6a7a;
       --text-light: #94a3b8;
-      --border:     rgba(0,196,167,0.18);
-      --ease-out:   cubic-bezier(0.23, 1, 0.32, 1);
+      --border:     rgba(0,212,180,0.15);
+      --ease:       cubic-bezier(0.23,1,0.32,1);
     }
 
     html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--cream); color: var(--text-main); line-height: 1.6; overflow-x: hidden; }
+    h1,h2,h3,h4 { font-family: 'Poppins', sans-serif; line-height: 1.15; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
 
-    body {
-      font-family: 'Inter', sans-serif;
-      background: var(--cream);
-      color: var(--text-main);
-      line-height: 1.6;
-      overflow-x: hidden;
+    /* ── SCROLL REVEAL ────────────────────────────────────────────── */
+    .rv        { opacity:0; transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
+    .rv-up     { transform: translateY(50px); }
+    .rv-left   { transform: translateX(-50px); }
+    .rv-right  { transform: translateX(50px); }
+    .rv-scale  { transform: scale(0.88); }
+    .rv.in     { opacity:1; transform: none; }
+
+    .stagger > * { opacity:0; transform: translateY(30px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+    .stagger.in > *:nth-child(1) { opacity:1; transform:none; transition-delay:0ms; }
+    .stagger.in > *:nth-child(2) { opacity:1; transform:none; transition-delay:100ms; }
+    .stagger.in > *:nth-child(3) { opacity:1; transform:none; transition-delay:200ms; }
+    .stagger.in > *:nth-child(4) { opacity:1; transform:none; transition-delay:300ms; }
+    .stagger.in > *:nth-child(5) { opacity:1; transform:none; transition-delay:400ms; }
+    .stagger.in > *:nth-child(6) { opacity:1; transform:none; transition-delay:500ms; }
+    @media (prefers-reduced-motion: reduce) { .rv, .stagger > * { transition: opacity 0.3s; transform: none !important; } }
+
+    /* ── PROGRESS BAR ─────────────────────────────────────────────── */
+    #progress-bar {
+      position: fixed; top: 0; left: 0; height: 3px; z-index: 9999;
+      background: linear-gradient(90deg, var(--teal), var(--zim-gold));
+      width: 0%; transition: width 0.1s linear;
     }
 
-    h1, h2, h3, h4 { font-family: 'Poppins', sans-serif; line-height: 1.2; }
-
-    /* ── SCROLL ANIMATIONS ─────────────────────────────────────────────── */
-    .reveal {
-      opacity: 0; transform: translateY(28px);
-      transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
-    }
-    .reveal.visible { opacity: 1; transform: none; }
-    .stagger > * {
-      opacity: 0; transform: translateY(22px);
-      transition: opacity 500ms var(--ease-out), transform 500ms var(--ease-out);
-    }
-    .stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:0ms; }
-    .stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:80ms; }
-    .stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:160ms; }
-    .stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:240ms; }
-    .stagger.visible > *:nth-child(5) { opacity:1; transform:none; transition-delay:320ms; }
-    .stagger.visible > *:nth-child(6) { opacity:1; transform:none; transition-delay:400ms; }
-    @media (prefers-reduced-motion: reduce) {
-      .reveal, .stagger > * { transition: opacity 200ms ease; transform: none; }
-    }
-
-    /* ── CONTAINER ─────────────────────────────────────────────────────── */
-    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
-
-    /* ── SHARED LABELS ─────────────────────────────────────────────────── */
+    /* ── LABEL ────────────────────────────────────────────────────── */
     .label {
-      display: inline-flex; align-items: center; gap: 6px;
-      font-size: 11px; font-weight: 700; letter-spacing: 1.4px;
-      text-transform: uppercase; padding: 5px 14px; border-radius: 20px;
-      margin-bottom: 18px;
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1.5px;
+      text-transform: uppercase; padding: 6px 16px; border-radius: 30px;
+      margin-bottom: 20px;
     }
-    .label-gold  { color: #7c5c00; background: #fef3c7; }
-    .label-teal  { color: var(--teal-dark); background: var(--teal-light); }
-    .label-green { color: var(--zim-green); background: #d1fae5; }
+    .label-gold  { color: #7c5c00; background: #fff0c2; border: 1px solid rgba(255,184,0,0.3); }
+    .label-teal  { color: var(--teal-dark); background: rgba(0,212,180,0.12); border: 1px solid rgba(0,212,180,0.25); }
+    .label-green { color: #155a23; background: rgba(26,107,42,0.1); border: 1px solid rgba(26,107,42,0.25); }
+    .label-light { color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); }
 
-    .section-heading { text-align: center; margin-bottom: 48px; }
-    .section-heading h2 { font-size: clamp(26px, 4vw, 40px); color: var(--navy); margin-bottom: 12px; }
-    .section-heading p  { font-size: 17px; color: var(--text-muted); max-width: 560px; margin: 0 auto; line-height: 1.7; }
+    .section-heading { text-align: center; margin-bottom: 56px; }
+    .section-heading h2 { font-size: clamp(28px,4.5vw,44px); color: var(--navy); margin-bottom: 14px; letter-spacing: -1px; }
+    .section-heading p  { font-size: 17px; color: var(--text-muted); max-width: 580px; margin: 0 auto; line-height: 1.75; }
 
-    /* ── BUTTONS ───────────────────────────────────────────────────────── */
+    /* ── BUTTONS ──────────────────────────────────────────────────── */
     .btn-primary {
-      background: var(--teal); color: white;
-      padding: 14px 32px; border-radius: 10px;
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+      color: white; padding: 15px 34px; border-radius: 12px;
       font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px;
       text-decoration: none; display: inline-block; border: none; cursor: pointer;
-      transition: background 200ms var(--ease-out), transform 150ms var(--ease-out), box-shadow 200ms;
+      box-shadow: 0 4px 20px var(--teal-glow);
+      transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+      position: relative; overflow: hidden;
     }
-    .btn-primary:hover { background: var(--teal-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,196,167,.35); }
+    .btn-primary::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 30px var(--teal-glow); }
+    .btn-primary:hover::after { opacity: 1; }
     .btn-primary:active { transform: scale(0.97); }
 
-    .btn-dark {
-      background: var(--navy); color: white;
-      padding: 14px 28px; border-radius: 10px;
-      font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px;
-      text-decoration: none; display: inline-block; border: none; cursor: pointer;
-      transition: background 200ms var(--ease-out), transform 150ms;
-    }
-    .btn-dark:hover { background: var(--navy-mid); transform: translateY(-1px); }
-
-    .btn-outline {
-      background: transparent; color: var(--navy);
-      padding: 13px 26px; border-radius: 10px;
+    .btn-ghost {
+      background: rgba(255,255,255,0.08); color: white;
+      padding: 14px 30px; border-radius: 12px;
       font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px;
       text-decoration: none; display: inline-block;
-      border: 2px solid rgba(10,31,46,0.3);
-      transition: border-color 200ms, transform 150ms;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+      backdrop-filter: blur(8px);
     }
-    .btn-outline:hover { border-color: var(--navy); transform: translateY(-1px); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.4); transform: translateY(-2px); }
 
-    /* ── DECORATIVE SUN SVG (Zimbabwe flag sun, simplified) ────────────── */
-    .zim-sun {
-      width: 120px; height: 120px; opacity: 0.07;
-      position: absolute; pointer-events: none;
+    .btn-outline-dark {
+      background: transparent; color: var(--text-main);
+      padding: 14px 28px; border-radius: 12px;
+      font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px;
+      text-decoration: none; display: inline-block;
+      border: 2px solid rgba(10,31,46,0.25);
+      transition: border-color 0.2s, transform 0.2s;
     }
+    .btn-outline-dark:hover { border-color: var(--navy); transform: translateY(-2px); }
 
-    /* ══════════════════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════════════════
        NAV
-    ══════════════════════════════════════════════════════════════════════ */
+    ══════════════════════════════════════════════════════════════ */
     nav {
-      position: sticky; top: 0; z-index: 200;
-      background: rgba(255,248,237,0.96);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(232,168,0,0.2);
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      transition: background 0.3s, box-shadow 0.3s, backdrop-filter 0.3s;
+    }
+    nav.scrolled {
+      background: rgba(8,15,26,0.92);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 1px 0 rgba(255,255,255,0.06);
     }
     .nav-inner {
-      max-width: 1100px; margin: 0 auto;
-      height: 66px; display: flex; align-items: center; justify-content: space-between;
-      padding: 0 24px;
+      max-width: 1120px; margin: 0 auto;
+      height: 70px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 28px;
     }
     .logo {
-      font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 21px;
-      color: var(--navy); letter-spacing: -0.5px; text-decoration: none;
+      font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 22px;
+      color: white; letter-spacing: -0.5px; text-decoration: none;
       display: flex; align-items: center; gap: 0;
     }
     .logo .logo-name span { color: var(--teal); }
-    .logo .flag-dots { margin-left: 8px; }
-    .logo .flag-dots {
-      display: flex; gap: 3px; align-items: center;
-    }
+    .logo .flag-dots { margin-left: 9px; display: flex; gap: 4px; align-items: center; }
     .logo .dot { width: 7px; height: 7px; border-radius: 50%; }
     .nav-right { display: flex; gap: 10px; align-items: center; }
-    .nav-login { font-size: 14px; font-weight: 600; color: var(--text-muted); text-decoration: none; padding: 8px 14px; border-radius: 8px; transition: color 200ms; }
-    .nav-login:hover { color: var(--navy); }
+    .nav-login {
+      font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.7);
+      text-decoration: none; padding: 8px 16px; border-radius: 8px;
+      transition: color 0.2s;
+    }
+    .nav-login:hover { color: white; }
 
-    /* ══════════════════════════════════════════════════════════════════════
-       HERO
-    ══════════════════════════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════════════════
+       HERO — ANIMATED DARK SECTION
+    ══════════════════════════════════════════════════════════════ */
+    @keyframes meshShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    @keyframes floatA { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-18px) rotate(3deg); } }
+    @keyframes floatB { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-12px) rotate(-2deg); } }
+    @keyframes floatC { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-22px); } }
+    @keyframes sunSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes pulseGlow { 0%,100% { opacity: 0.4; transform: scale(1); } 50% { opacity: 0.7; transform: scale(1.08); } }
+    @keyframes fadeSlideUp { from { opacity:0; transform: translateY(30px); } to { opacity:1; transform: none; } }
+    @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0; } }
+    @keyframes shimmer {
+      0%   { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    @keyframes countUp { from { opacity:0; transform: scale(0.7); } to { opacity:1; transform: scale(1); } }
+    @keyframes borderRun {
+      0%   { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+    @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
     .hero-wrap {
-      position: relative; overflow: hidden;
-      background: linear-gradient(145deg, #FFF3DC 0%, #FFF8ED 40%, #ecfdf5 100%);
-      border-bottom: 1px solid rgba(232,168,0,0.15);
+      min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+      position: relative; overflow: hidden; padding-top: 70px;
+      background: linear-gradient(-45deg, #080F1A, #0D2137, #071610, #1A0A0D, #080F1A);
+      background-size: 500% 500%;
+      animation: meshShift 18s ease infinite;
     }
-    /* Subtle geometric stripe */
-    .hero-wrap::before {
-      content: '';
-      position: absolute; inset: 0;
-      background: repeating-linear-gradient(
-        -45deg,
-        transparent,
-        transparent 40px,
-        rgba(232,168,0,0.03) 40px,
-        rgba(232,168,0,0.03) 41px
-      );
-      pointer-events: none;
-    }
-    .hero-sun-left {
-      position: absolute; top: -30px; left: -40px;
-      width: 280px; height: 280px; opacity: 0.06;
-    }
-    .hero-sun-right {
-      position: absolute; bottom: -60px; right: -50px;
-      width: 320px; height: 320px; opacity: 0.05;
-    }
-    .hero {
-      position: relative; padding: 100px 24px 88px;
-      text-align: center; max-width: 800px; margin: 0 auto;
-    }
-    .hero h1 {
-      font-size: clamp(40px, 7vw, 74px);
-      font-weight: 900; color: var(--navy);
-      letter-spacing: -2.5px; margin-bottom: 22px;
-      line-height: 1.08;
-    }
-    .hero h1 .teal { color: var(--teal); }
-    .hero h1 .gold { color: var(--zim-gold); }
-    .hero-sub {
-      font-size: clamp(17px, 2.5vw, 20px);
-      color: var(--text-muted); max-width: 620px;
-      margin: 0 auto 40px; line-height: 1.75;
-    }
-    .hero-cta { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-    .hero-cta-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-    .hero-cta small { color: var(--text-light); font-size: 13px; }
-    .hero-login-link { font-size: 14px; color: var(--text-muted); }
-    .hero-login-link a { color: var(--teal-dark); font-weight: 700; text-decoration: none; }
 
-    /* ── Payment method pills in hero ── */
+    /* Glowing orbs */
+    .orb {
+      position: absolute; border-radius: 50%; pointer-events: none;
+      filter: blur(80px);
+    }
+    .orb-1 { width: 480px; height: 480px; top: -100px; right: -80px; background: rgba(0,212,180,0.12); animation: pulseGlow 8s ease infinite; }
+    .orb-2 { width: 360px; height: 360px; bottom: -80px; left: -60px; background: rgba(255,184,0,0.08); animation: pulseGlow 10s ease infinite 2s; }
+    .orb-3 { width: 280px; height: 280px; top: 40%; left: 20%; background: rgba(26,107,42,0.06); animation: pulseGlow 12s ease infinite 4s; }
+
+    /* Animated grid overlay */
+    .hero-wrap::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(rgba(0,212,180,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,212,180,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* Zimbabwe sun decorative */
+    .hero-sun-deco {
+      position: absolute; top: 60px; right: 100px;
+      width: 200px; height: 200px; opacity: 0.04;
+      animation: sunSpin 40s linear infinite;
+    }
+    .hero-sun-deco2 {
+      position: absolute; bottom: 40px; left: 60px;
+      width: 140px; height: 140px; opacity: 0.05;
+      animation: sunSpin 60s linear infinite reverse;
+    }
+
+    /* Floating payment pills in hero background */
+    .floating-pill {
+      position: absolute; background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 30px; padding: 8px 18px;
+      font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 12px;
+      color: rgba(255,255,255,0.6); pointer-events: none;
+      white-space: nowrap;
+    }
+    .fp-1 { top: 18%; right: 8%; animation: floatA 6s ease-in-out infinite; }
+    .fp-2 { top: 30%; right: 4%; animation: floatB 8s ease-in-out infinite 1s; }
+    .fp-3 { top: 55%; right: 10%; animation: floatC 7s ease-in-out infinite 2s; }
+    .fp-4 { top: 70%; right: 5%; animation: floatA 9s ease-in-out infinite 0.5s; }
+    .fp-5 { top: 22%; left: 5%; animation: floatB 7s ease-in-out infinite 1.5s; }
+    .fp-6 { top: 60%; left: 3%; animation: floatC 8s ease-in-out infinite 3s; }
+    @media (max-width: 768px) { .floating-pill { display: none; } }
+
+    .hero-content {
+      position: relative; z-index: 10;
+      padding: 80px 28px 80px; max-width: 800px; margin: 0 auto; text-align: center;
+    }
+    .hero-content .label { animation: fadeSlideUp 0.6s var(--ease) 0.2s both; }
+
+    .hero-h1 {
+      font-size: clamp(42px,7.5vw,80px);
+      font-weight: 900; color: white;
+      letter-spacing: -2.5px; margin-bottom: 24px;
+      line-height: 1.06;
+      animation: fadeSlideUp 0.7s var(--ease) 0.4s both;
+    }
+    .hero-h1 .teal {
+      color: transparent;
+      background: linear-gradient(90deg, var(--teal), #4FFFDF, var(--teal));
+      background-size: 200%;
+      -webkit-background-clip: text; background-clip: text;
+      animation: shimmer 3s linear infinite 1.5s;
+    }
+    .hero-h1 .gold { color: var(--zim-gold); }
+
+    .hero-sub {
+      font-size: clamp(16px,2.2vw,20px); color: rgba(255,255,255,0.65);
+      max-width: 640px; margin: 0 auto 36px; line-height: 1.8;
+      animation: fadeSlideUp 0.7s var(--ease) 0.6s both;
+    }
+    .hero-sub strong { color: white; }
+
+    /* Payment method pills row */
     .hero-wallets {
-      display: flex; flex-wrap: wrap; gap: 8px;
-      justify-content: center; margin-bottom: 32px;
+      display: flex; flex-wrap: wrap; gap: 9px;
+      justify-content: center; margin-bottom: 40px;
+      animation: fadeSlideUp 0.7s var(--ease) 0.8s both;
     }
     .wallet-pill {
-      background: white; border: 1.5px solid rgba(232,168,0,0.3);
-      color: var(--text-main); padding: 7px 16px;
-      border-radius: 24px; font-size: 13px; font-weight: 700;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.18);
+      color: white; padding: 8px 18px;
+      border-radius: 30px; font-size: 13px; font-weight: 700;
+      transition: background 0.2s, border-color 0.2s, transform 0.2s;
+    }
+    .wallet-pill:hover { background: rgba(0,212,180,0.15); border-color: var(--teal); transform: scale(1.05); }
+
+    .hero-cta {
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      animation: fadeSlideUp 0.7s var(--ease) 1s both;
+    }
+    .hero-cta-row { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+    .hero-cta small { color: rgba(255,255,255,0.4); font-size: 12.5px; }
+    .hero-login-link { font-size: 14px; color: rgba(255,255,255,0.5); }
+    .hero-login-link a { color: var(--teal); font-weight: 700; text-decoration: none; }
+    .hero-login-link a:hover { text-decoration: underline; }
+
+    /* Hero stats row */
+    .hero-stats {
+      display: flex; gap: 0; justify-content: center; flex-wrap: wrap;
+      margin-top: 64px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      animation: fadeSlideUp 0.7s var(--ease) 1.2s both;
+    }
+    .hero-stat {
+      padding: 24px 36px; text-align: center;
+      border-right: 1px solid rgba(255,255,255,0.07);
+    }
+    .hero-stat:last-child { border-right: none; }
+    .hero-stat-num {
+      font-family: 'Poppins', sans-serif; font-weight: 900;
+      font-size: 32px; color: var(--teal); line-height: 1;
+      margin-bottom: 4px;
+    }
+    .hero-stat-lbl { font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 500; }
+    @media (max-width: 600px) {
+      .hero-stat { padding: 18px 20px; }
+      .hero-stat-num { font-size: 24px; }
+      .hero-stats { border-top: none; margin-top: 40px; }
     }
 
-    /* ══════════════════════════════════════════════════════════════════════
-       TRUST STRIP
-    ══════════════════════════════════════════════════════════════════════ */
-    .trust-strip {
-      background: var(--navy);
-      padding: 14px 24px;
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 24px;
+    /* ══════════════════════════════════════════════════════════════
+       MARQUEE TRUST STRIP
+    ══════════════════════════════════════════════════════════════ */
+    .trust-strip { background: var(--zim-green); padding: 14px 0; overflow: hidden; }
+    .marquee-track {
+      display: flex; width: max-content;
+      animation: marquee 24s linear infinite;
     }
+    .marquee-track:hover { animation-play-state: paused; }
     .trust-item {
-      color: rgba(255,255,255,0.85); font-size: 12.5px; font-weight: 600;
-      display: flex; align-items: center; gap: 7px;
+      color: rgba(255,255,255,0.9); font-size: 13px; font-weight: 600;
+      display: flex; align-items: center; gap: 8px;
+      padding: 0 32px; white-space: nowrap;
     }
     .trust-check {
-      background: var(--teal); border-radius: 50%;
-      width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
-      font-size: 11px; flex-shrink: 0; color: white;
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; flex-shrink: 0;
     }
+    .trust-sep { color: rgba(255,255,255,0.2); font-size: 18px; }
 
-    /* ══════════════════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════════════════
        PAIN STORIES
-    ══════════════════════════════════════════════════════════════════════ */
-    .pain-section {
-      background: white; padding: 80px 24px;
-      border-bottom: 1px solid rgba(0,196,167,0.1);
-    }
-    .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; }
+    ══════════════════════════════════════════════════════════════ */
+    .pain-section { background: white; padding: 100px 28px; }
+    .pain-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 22px; }
     .pain-card {
-      background: #fff1f2; border: 1.5px solid #fecdd3;
-      border-radius: 16px; padding: 28px;
-      transition: transform 200ms var(--ease-out), box-shadow 200ms;
+      background: linear-gradient(145deg, #fff1f2, #fff8f8);
+      border: 1.5px solid #fecdd3;
+      border-radius: 20px; padding: 32px;
+      position: relative; overflow: hidden;
+      transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
     }
-    .pain-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(200,39,42,0.1); }
-    .pain-icon { font-size: 30px; margin-bottom: 12px; display: block; }
-    .pain-card h3 { font-size: 17px; color: var(--navy); margin-bottom: 8px; }
-    .pain-card p  { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+    .pain-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--zim-red), #ff6b6b);
+    }
+    .pain-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(200,39,42,0.12); }
+    .pain-icon { font-size: 34px; margin-bottom: 16px; display: block; }
+    .pain-card h3 { font-size: 17px; color: var(--navy); margin-bottom: 10px; }
+    .pain-card p  { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
 
-    /* ══════════════════════════════════════════════════════════════════════
-       BRIDGE — SOLUTION REVEAL
-    ══════════════════════════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════════════════
+       BRIDGE
+    ══════════════════════════════════════════════════════════════ */
     .bridge {
-      background: linear-gradient(135deg, #0A1F2E 0%, #132d3f 100%);
-      padding: 80px 24px; text-align: center; position: relative; overflow: hidden;
+      background: var(--navy); padding: 100px 28px;
+      text-align: center; position: relative; overflow: hidden;
     }
-    .bridge-sun {
-      position: absolute; top: -40px; right: -60px;
-      width: 300px; height: 300px; opacity: 0.05;
+    .bridge::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(0,212,180,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .bridge-line {
+      position: absolute; left: 50%; top: 0; bottom: 0;
+      width: 1px; background: linear-gradient(180deg, transparent, rgba(0,212,180,0.15), transparent);
+      transform: translateX(-50%); pointer-events: none;
     }
     .bridge h2 {
-      font-size: clamp(28px, 4vw, 46px); color: white;
-      margin-bottom: 20px; letter-spacing: -1px;
+      font-size: clamp(28px,4.5vw,50px); color: white;
+      margin-bottom: 24px; letter-spacing: -1.5px;
     }
     .bridge h2 .teal { color: var(--teal); }
     .bridge p {
-      font-size: clamp(16px, 2vw, 19px); color: #94a3b8;
-      max-width: 660px; margin: 0 auto 36px; line-height: 1.75;
+      font-size: clamp(16px,2vw,19px); color: rgba(255,255,255,0.6);
+      max-width: 680px; margin: 0 auto 44px; line-height: 1.85;
     }
     .bridge p strong { color: white; }
 
-    /* ══════════════════════════════════════════════════════════════════════
-       WHY LOCAL
-    ══════════════════════════════════════════════════════════════════════ */
-    .local-section { padding: 80px 24px; background: var(--warm-pale); }
-    .local-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; }
+    /* ══════════════════════════════════════════════════════════════
+       WHY LOCAL — SPLIT LAYOUT
+    ══════════════════════════════════════════════════════════════ */
+    .local-section { padding: 100px 28px; background: var(--cream); }
+    .local-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px,1fr)); gap: 24px; }
     .local-card {
-      border-radius: 16px; padding: 28px;
-      background: white; border: 1.5px solid rgba(232,168,0,0.2);
-      box-shadow: 0 2px 12px rgba(232,168,0,0.06);
-      transition: transform 200ms var(--ease-out), box-shadow 200ms;
+      border-radius: 20px; padding: 32px;
+      background: white;
+      border: 1px solid rgba(0,0,0,0.06);
+      box-shadow: 0 2px 16px rgba(0,0,0,0.04);
+      transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
+      position: relative; overflow: hidden;
     }
-    .local-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(232,168,0,0.12); }
-    .local-icon { font-size: 32px; margin-bottom: 14px; display: block; }
-    .local-card h3 { font-size: 17px; color: var(--navy); margin-bottom: 8px; }
-    .local-card p  { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+    .local-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, var(--zim-gold), var(--teal));
+      transform: scaleX(0); transform-origin: left;
+      transition: transform 0.4s var(--ease);
+    }
+    .local-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
+    .local-card:hover::after { transform: scaleX(1); }
+    .local-icon-wrap {
+      width: 56px; height: 56px; border-radius: 16px;
+      background: linear-gradient(135deg, rgba(0,212,180,0.12), rgba(255,184,0,0.08));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; margin-bottom: 18px;
+    }
+    .local-card h3 { font-size: 17px; color: var(--navy); margin-bottom: 10px; }
+    .local-card p  { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
 
-    /* ══════════════════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════════════════
        PAYMENT METHODS
-    ══════════════════════════════════════════════════════════════════════ */
-    .payments-section { padding: 80px 24px; background: white; }
-    .payments-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top: 40px; }
+    ══════════════════════════════════════════════════════════════ */
+    .payments-section { padding: 100px 28px; background: white; }
+    .payments-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(310px,1fr)); gap: 16px; margin-top: 48px; }
     .payment-row {
-      background: var(--warm-pale); border: 1.5px solid var(--border);
-      border-radius: 14px; padding: 20px 22px;
-      display: flex; gap: 16px; align-items: flex-start;
-      transition: border-color 200ms, transform 200ms var(--ease-out);
+      background: var(--warm); border: 1.5px solid rgba(0,0,0,0.06);
+      border-radius: 16px; padding: 22px 24px;
+      display: flex; gap: 18px; align-items: flex-start;
+      transition: border-color 0.3s, transform 0.3s var(--ease), box-shadow 0.3s;
     }
-    .payment-row:hover { border-color: var(--teal); transform: translateY(-2px); }
+    .payment-row:hover { border-color: var(--teal); transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,212,180,0.1); }
     .pay-badge {
-      background: var(--teal-light); color: var(--teal-dark);
-      font-weight: 800; font-size: 13px; padding: 6px 14px;
-      border-radius: 8px; flex-shrink: 0; min-width: 96px;
-      text-align: center; letter-spacing: 0.3px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      color: white; font-weight: 800; font-size: 12px;
+      padding: 8px 14px; border-radius: 10px; flex-shrink: 0;
+      min-width: 96px; text-align: center; letter-spacing: 0.3px;
+      box-shadow: 0 4px 12px var(--teal-glow);
     }
-    .pay-desc h3 { font-size: 15px; color: var(--navy); margin-bottom: 4px; }
-    .pay-desc p  { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+    .pay-desc h3 { font-size: 15px; color: var(--navy); margin-bottom: 5px; }
+    .pay-desc p  { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
 
-    /* ══════════════════════════════════════════════════════════════════════
-       HOW IT WORKS
-    ══════════════════════════════════════════════════════════════════════ */
-    .how-section { padding: 80px 24px; background: var(--warm-pale); }
-    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
-    .step-item {
-      padding: 36px 28px; border-right: 1px solid rgba(0,196,167,0.12);
-      position: relative;
+    /* ══════════════════════════════════════════════════════════════
+       HOW IT WORKS — CONNECTED STEPS
+    ══════════════════════════════════════════════════════════════ */
+    .how-section { padding: 100px 28px; background: var(--cream); }
+    .steps-wrap { position: relative; }
+    .steps-connector {
+      position: absolute; top: 27px; left: calc(12.5% + 14px); right: calc(12.5% + 14px);
+      height: 2px; background: linear-gradient(90deg, var(--teal), var(--zim-gold));
+      z-index: 0;
     }
-    .step-item:last-child { border-right: none; }
-    .step-num {
-      width: 54px; height: 54px;
-      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+    @media (max-width: 768px) { .steps-connector { display: none; } }
+    .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); position: relative; z-index: 1; }
+    .step-item { padding: 0 28px 0; text-align: center; }
+    .step-num-wrap {
+      width: 56px; height: 56px; margin: 0 auto 20px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
       color: white; font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 22px;
-      border-radius: 14px; display: flex; align-items: center; justify-content: center;
-      margin-bottom: 18px; box-shadow: 0 4px 14px rgba(0,196,167,.3);
+      border-radius: 16px; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 20px var(--teal-glow);
+      position: relative; z-index: 2;
     }
     .step-item h3 { font-size: 17px; color: var(--navy); margin-bottom: 10px; }
-    .step-item p  { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
+    .step-item p  { font-size: 14px; color: var(--text-muted); line-height: 1.7; }
     @media (max-width: 768px) {
-      .steps { grid-template-columns: 1fr; }
-      .step-item { border-right: none; border-bottom: 1px solid rgba(0,196,167,0.12); padding: 28px 20px; }
-      .step-item:last-child { border-bottom: none; }
+      .steps { grid-template-columns: 1fr; gap: 40px; }
+      .step-item { padding: 0; text-align: left; display: flex; gap: 20px; align-items: flex-start; }
+      .step-num-wrap { margin: 0; flex-shrink: 0; }
     }
 
-    /* ══════════════════════════════════════════════════════════════════════
-       PRICING
-    ══════════════════════════════════════════════════════════════════════ */
-    .pricing-section { padding: 80px 24px; background: white; }
-    .pricing-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 900px; margin: 0 auto; }
+    /* ══════════════════════════════════════════════════════════════
+       PRICING — FEATURED BOX
+    ══════════════════════════════════════════════════════════════ */
+    .pricing-section { padding: 100px 28px; background: var(--navy); position: relative; overflow: hidden; }
+    .pricing-section::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 50% at 30% 50%, rgba(255,184,0,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .pricing-section .section-heading h2 { color: white; }
+    .pricing-section .section-heading p  { color: rgba(255,255,255,0.5); }
+    .pricing-section .label-gold { color: #7c5c00; background: #fff0c2; }
+
+    .pricing-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; max-width: 920px; margin: 0 auto; }
     @media (max-width: 680px) { .pricing-layout { grid-template-columns: 1fr; } }
 
     .pricing-box {
-      background: var(--navy); border-radius: 20px; padding: 40px;
-      color: white; position: relative; overflow: hidden;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border-radius: 24px; padding: 44px;
+      position: relative; overflow: hidden;
     }
-    .pricing-box::after {
-      content: '';
-      position: absolute; top: -30px; right: -30px;
-      width: 160px; height: 160px; border-radius: 50%;
-      background: rgba(0,196,167,0.08); pointer-events: none;
+    .pricing-box::before {
+      content: ''; position: absolute; inset: -1px;
+      background: linear-gradient(135deg, rgba(0,212,180,0.4), transparent 50%, rgba(255,184,0,0.2));
+      border-radius: 24px; z-index: -1;
     }
     .price-num {
-      font-family: 'Poppins', sans-serif; font-size: 84px;
+      font-family: 'Poppins', sans-serif; font-size: 90px;
       font-weight: 900; color: var(--teal); line-height: 1;
       margin-bottom: 4px;
     }
-    .price-label { font-size: 18px; font-weight: 700; color: white; margin-bottom: 4px; }
-    .price-sub   { font-size: 13px; color: #64748b; margin-bottom: 24px; }
-    .price-examples { background: rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; }
-    .price-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px; }
+    .price-label { font-size: 18px; font-weight: 700; color: white; margin-bottom: 6px; }
+    .price-sub   { font-size: 13px; color: rgba(255,255,255,0.4); margin-bottom: 28px; }
+    .price-examples { background: rgba(255,255,255,0.04); border-radius: 14px; padding: 22px; }
+    .price-row {
+      display: flex; justify-content: space-between; padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px;
+    }
     .price-row:last-child { border-bottom: none; padding-bottom: 0; }
-    .price-row .lbl { color: #94a3b8; }
+    .price-row .lbl { color: rgba(255,255,255,0.4); }
     .price-row .val { color: white; font-weight: 700; }
 
     .pricing-table {
-      background: var(--warm-pale); border: 1.5px solid var(--border);
-      border-radius: 20px; overflow: hidden;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px; overflow: hidden;
     }
     .pt-header {
       background: linear-gradient(135deg, var(--zim-green), #1e8c37);
-      color: white; padding: 18px 24px;
-      font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 16px;
+      color: white; padding: 18px 26px;
+      font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 15px;
       display: flex; justify-content: space-between;
     }
     .pt-header span:last-child { color: #a7f3d0; }
     .pt-row {
-      display: flex; justify-content: space-between; padding: 14px 24px;
-      border-bottom: 1px solid rgba(0,196,167,0.1); font-size: 14px;
+      display: flex; justify-content: space-between; padding: 14px 26px;
+      border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 14px;
     }
     .pt-row:last-child { border-bottom: none; }
-    .pt-row:nth-child(even) { background: white; }
-    .pt-row .pt-key { color: var(--text-muted); font-weight: 500; }
-    .pt-row .pt-val { color: var(--teal-dark); font-weight: 700; }
-    .pt-row .pt-val.zero { color: var(--zim-green); }
+    .pt-row .pt-key { color: rgba(255,255,255,0.5); }
+    .pt-row .pt-val { color: var(--teal); font-weight: 700; }
+    .pt-row .pt-val.zero { color: #4ade80; }
 
-    /* ══════════════════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════════════════
        COMPARISON TABLE
-    ══════════════════════════════════════════════════════════════════════ */
-    .compare-section { padding: 80px 24px; background: var(--warm-pale); }
+    ══════════════════════════════════════════════════════════════ */
+    .compare-section { padding: 100px 28px; background: var(--cream); }
     .compare-table {
-      max-width: 860px; margin: 0 auto; border-radius: 18px;
+      max-width: 880px; margin: 0 auto; border-radius: 20px;
       overflow: hidden; border: 1.5px solid var(--border);
-      box-shadow: 0 4px 28px rgba(0,196,167,0.08);
+      box-shadow: 0 8px 40px rgba(0,0,0,0.06);
     }
     .compare-header { display: grid; grid-template-columns: 2fr 1fr 1fr; background: var(--navy); }
-    .compare-header div { padding: 16px 22px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 14px; color: white; }
+    .compare-header div { padding: 18px 24px; font-family: 'Poppins', sans-serif; font-weight: 700; font-size: 14px; color: white; }
     .compare-header div:nth-child(2) { color: var(--teal); text-align: center; }
-    .compare-header div:nth-child(3) { color: #94a3b8; text-align: center; }
-    .compare-row { display: grid; grid-template-columns: 2fr 1fr 1fr; border-bottom: 1px solid rgba(0,196,167,0.1); }
+    .compare-header div:nth-child(3) { color: rgba(255,255,255,0.4); text-align: center; }
+    .compare-row { display: grid; grid-template-columns: 2fr 1fr 1fr; border-bottom: 1px solid rgba(0,0,0,0.05); transition: background 0.2s; }
     .compare-row:last-child { border-bottom: none; }
-    .compare-row:nth-child(even) { background: white; }
-    .compare-row div { padding: 13px 22px; font-size: 14px; }
+    .compare-row:hover { background: rgba(0,212,180,0.04); }
+    .compare-row div { padding: 14px 24px; font-size: 14px; }
     .compare-row div:nth-child(1) { font-weight: 500; color: var(--text-main); }
     .compare-row div:nth-child(2) { color: var(--teal-dark); font-weight: 700; text-align: center; }
     .compare-row div:nth-child(3) { color: #ef4444; text-align: center; font-weight: 600; }
     .compare-row div.neutral { color: #94a3b8; font-weight: 400; }
     @media (max-width: 600px) {
       .compare-header, .compare-row { grid-template-columns: 1.4fr 1fr 1fr; }
-      .compare-header div, .compare-row div { padding: 11px 12px; font-size: 12px; }
+      .compare-header div, .compare-row div { padding: 12px 12px; font-size: 12px; }
     }
 
-    /* ══════════════════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════════════════
        SECURITY
-    ══════════════════════════════════════════════════════════════════════ */
-    .security-section { padding: 80px 24px; background: white; }
-    .security-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 40px; }
+    ══════════════════════════════════════════════════════════════ */
+    .security-section { padding: 100px 28px; background: white; }
+    .security-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap: 22px; margin-top: 48px; }
     .security-card {
-      background: var(--warm-pale); border: 1.5px solid var(--border);
-      border-radius: 16px; padding: 30px; text-align: center;
-      transition: transform 200ms var(--ease-out);
-    }
-    .security-card:hover { transform: translateY(-3px); }
-    .security-card .icon { font-size: 38px; margin-bottom: 14px; display: block; }
-    .security-card h3 { font-size: 16px; color: var(--navy); margin-bottom: 8px; }
-    .security-card p  { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
-
-    /* ══════════════════════════════════════════════════════════════════════
-       BUSINESS TYPES
-    ══════════════════════════════════════════════════════════════════════ */
-    .biz-section { padding: 64px 24px; background: var(--warm-pale); text-align: center; }
-    .biz-section h2 { font-size: clamp(22px, 3vw, 32px); color: var(--navy); margin-bottom: 24px; }
-    .biz-tags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-    .biz-tag {
-      background: white; border: 1.5px solid rgba(232,168,0,0.25);
-      color: var(--text-main); padding: 8px 18px;
-      border-radius: 24px; font-size: 14px; font-weight: 600;
-      box-shadow: 0 1px 5px rgba(0,0,0,0.05);
-      transition: border-color 200ms, transform 150ms;
-    }
-    .biz-tag:hover { border-color: var(--teal); transform: scale(1.03); }
-
-    /* ══════════════════════════════════════════════════════════════════════
-       FAQ
-    ══════════════════════════════════════════════════════════════════════ */
-    .faq-section { padding: 80px 24px; background: white; }
-    .faq-grid {
-      max-width: 820px; margin: 40px auto 0;
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 18px;
-    }
-    .faq-item {
-      padding: 24px; border: 1.5px solid var(--border);
-      border-radius: 16px;
-      background: linear-gradient(135deg, #FFF8ED, #ecfdf5);
-      transition: border-color 200ms;
-    }
-    .faq-item:hover { border-color: var(--teal); }
-    .faq-item h3 {
-      font-size: 15px; color: var(--navy); margin-bottom: 10px;
-      display: flex; gap: 10px; align-items: flex-start;
-    }
-    .faq-q {
-      background: var(--teal); color: white;
-      font-size: 10px; font-weight: 800; padding: 2px 7px;
-      border-radius: 6px; flex-shrink: 0; margin-top: 2px; letter-spacing: 0.5px;
-    }
-    .faq-item p { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
-
-    /* ══════════════════════════════════════════════════════════════════════
-       MIGRATION / RISK REVERSAL
-    ══════════════════════════════════════════════════════════════════════ */
-    .migrate-section { padding: 0 24px 80px; }
-    .migrate-box {
-      max-width: 760px; margin: 0 auto;
-      background: linear-gradient(135deg, var(--navy), var(--navy-mid));
-      border-radius: 22px; padding: 52px; text-align: center;
+      background: var(--warm); border: 1.5px solid rgba(0,0,0,0.06);
+      border-radius: 20px; padding: 32px; text-align: center;
+      transition: transform 0.3s var(--ease), border-color 0.3s;
       position: relative; overflow: hidden;
     }
-    .migrate-box::before {
-      content: ''; position: absolute; inset: 0;
-      background: radial-gradient(ellipse 60% 60% at 80% 20%, rgba(0,196,167,0.1) 0%, transparent 70%);
-      pointer-events: none;
+    .security-card:hover { transform: translateY(-6px); border-color: var(--teal); }
+    .security-icon-wrap {
+      width: 64px; height: 64px; border-radius: 18px;
+      background: linear-gradient(135deg, var(--navy), var(--navy-light));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; margin: 0 auto 18px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
     }
-    .migrate-box h2 { font-size: clamp(24px, 3.5vw, 36px); color: white; margin-bottom: 14px; }
-    .migrate-box p  { color: #94a3b8; font-size: 16px; line-height: 1.75; margin-bottom: 32px; }
-    .migrate-box p strong { color: white; }
-    .migrate-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .security-card h3 { font-size: 16px; color: var(--navy); margin-bottom: 10px; }
+    .security-card p  { font-size: 14px; color: var(--text-muted); line-height: 1.65; }
 
-    .risk-box {
-      max-width: 700px; margin: 32px auto 0;
-      background: var(--teal-light); border: 1.5px solid rgba(0,196,167,0.4);
-      border-radius: 16px; padding: 32px; text-align: center;
+    /* ══════════════════════════════════════════════════════════════
+       BUSINESS TYPES
+    ══════════════════════════════════════════════════════════════ */
+    .biz-section { padding: 80px 28px; background: var(--cream); text-align: center; }
+    .biz-section h2 { font-size: clamp(22px,3vw,34px); color: var(--navy); margin-bottom: 28px; letter-spacing: -0.5px; }
+    .biz-tags { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+    .biz-tag {
+      background: white; border: 1.5px solid rgba(0,0,0,0.08);
+      color: var(--text-main); padding: 9px 20px;
+      border-radius: 30px; font-size: 14px; font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      transition: border-color 0.2s, color 0.2s, transform 0.2s, box-shadow 0.2s;
     }
-    .risk-box h3 { font-size: 20px; color: var(--navy); margin-bottom: 10px; }
-    .risk-box p  { font-size: 15px; color: var(--text-muted); line-height: 1.7; }
+    .biz-tag:hover { border-color: var(--teal); color: var(--teal-dark); transform: scale(1.05); box-shadow: 0 6px 16px rgba(0,212,180,0.12); }
 
-    /* ══════════════════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════════════════
+       FAQ — ACCORDION
+    ══════════════════════════════════════════════════════════════ */
+    .faq-section { padding: 100px 28px; background: white; }
+    .faq-list { max-width: 820px; margin: 48px auto 0; display: flex; flex-direction: column; gap: 12px; }
+    .faq-item {
+      border: 1.5px solid rgba(0,0,0,0.07);
+      border-radius: 16px; overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .faq-item:hover { border-color: rgba(0,212,180,0.3); }
+    .faq-item.open { border-color: var(--teal); box-shadow: 0 4px 20px rgba(0,212,180,0.1); }
+    .faq-q-btn {
+      width: 100%; background: none; border: none; cursor: pointer;
+      padding: 22px 24px; display: flex; justify-content: space-between; align-items: center;
+      text-align: left; gap: 16px;
+    }
+    .faq-q-text {
+      font-family: 'Poppins', sans-serif; font-weight: 700;
+      font-size: 15px; color: var(--navy);
+    }
+    .faq-arrow {
+      width: 28px; height: 28px; border-radius: 50%;
+      background: rgba(0,212,180,0.1); color: var(--teal-dark);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+      transition: transform 0.3s var(--ease), background 0.2s;
+    }
+    .faq-item.open .faq-arrow { transform: rotate(45deg); background: var(--teal); color: white; }
+    .faq-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.4s var(--ease), padding 0.3s;
+    }
+    .faq-item.open .faq-body { max-height: 200px; }
+    .faq-body p {
+      padding: 0 24px 22px;
+      font-size: 14px; color: var(--text-muted); line-height: 1.75;
+    }
+
+    /* ══════════════════════════════════════════════════════════════
        GOLD TRUST BAR
-    ══════════════════════════════════════════════════════════════════════ */
+    ══════════════════════════════════════════════════════════════ */
     .gold-bar {
-      background: linear-gradient(90deg, var(--zim-gold) 0%, #f5b800 100%);
-      padding: 18px 24px;
-      display: flex; flex-wrap: wrap; justify-content: center; gap: 24px;
+      background: linear-gradient(90deg, var(--zim-gold), #f5b800, var(--zim-gold));
+      background-size: 200%;
+      animation: borderRun 6s linear infinite;
+      padding: 20px 28px;
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 28px;
     }
     .gold-bar .trust-item { color: var(--navy); }
     .gold-bar .trust-check { background: rgba(10,31,46,0.15); color: var(--navy); }
 
-    /* ══════════════════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════════════════
+       MIGRATION / RISK REVERSAL
+    ══════════════════════════════════════════════════════════════ */
+    .migrate-section { padding: 100px 28px; background: var(--cream); }
+    .migrate-box {
+      max-width: 780px; margin: 0 auto;
+      background: var(--navy);
+      border-radius: 28px; padding: 60px;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .migrate-box::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 80% 20%, rgba(0,212,180,0.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .migrate-box::after {
+      content: ''; position: absolute; inset: -1px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(0,212,180,0.3), transparent, rgba(255,184,0,0.2));
+      z-index: -1;
+    }
+    .migrate-box h2 { font-size: clamp(26px,3.5vw,38px); color: white; margin-bottom: 16px; letter-spacing: -0.5px; }
+    .migrate-box p  { color: rgba(255,255,255,0.55); font-size: 16px; line-height: 1.85; margin-bottom: 36px; }
+    .migrate-box p strong { color: white; }
+    .migrate-ctas { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    .risk-box {
+      max-width: 700px; margin: 28px auto 0;
+      background: rgba(0,212,180,0.08); border: 1.5px solid rgba(0,212,180,0.25);
+      border-radius: 20px; padding: 36px; text-align: center;
+    }
+    .risk-box h3 { font-size: 20px; color: var(--navy); margin-bottom: 12px; }
+    .risk-box p  { font-size: 15px; color: var(--text-muted); line-height: 1.75; }
+
+    /* ══════════════════════════════════════════════════════════════
        FINAL CTA
-    ══════════════════════════════════════════════════════════════════════ */
+    ══════════════════════════════════════════════════════════════ */
+    @keyframes ctaPulse { 0%,100% { box-shadow: 0 4px 20px var(--teal-glow); } 50% { box-shadow: 0 8px 40px rgba(0,212,180,0.5); } }
+
     .final-cta {
-      padding: 100px 24px;
+      padding: 120px 28px;
       text-align: center;
-      background: linear-gradient(160deg, #FFF3DC 0%, #FFF8ED 50%, #ecfdf5 100%);
+      background: var(--navy);
       position: relative; overflow: hidden;
     }
+    .final-cta::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 70% at 50% 50%, rgba(0,212,180,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
     .final-cta-sun {
-      position: absolute; bottom: -60px; left: 50%;
-      transform: translateX(-50%);
-      width: 400px; height: 400px; opacity: 0.04;
+      position: absolute; bottom: -80px; left: 50%; transform: translateX(-50%);
+      width: 500px; height: 500px; opacity: 0.03;
+      animation: sunSpin 60s linear infinite;
     }
     .final-cta h2 {
-      font-size: clamp(32px, 5vw, 56px); color: var(--navy);
-      margin-bottom: 16px; letter-spacing: -1.5px; line-height: 1.1;
+      font-size: clamp(34px,5.5vw,62px); color: white;
+      margin-bottom: 18px; letter-spacing: -2px; line-height: 1.08;
     }
     .final-cta h2 .teal { color: var(--teal); }
-    .final-cta p { font-size: 18px; color: var(--text-muted); max-width: 520px; margin: 0 auto 40px; line-height: 1.7; }
-    .cta-note { margin-top: 16px; color: var(--text-light); font-size: 13px; }
-    .cta-stack { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .final-cta p { font-size: 18px; color: rgba(255,255,255,0.5); max-width: 540px; margin: 0 auto 48px; line-height: 1.75; }
+    .cta-stack { display: flex; flex-direction: column; align-items: center; gap: 14px; position: relative; z-index: 1; }
+    .final-cta .btn-primary { animation: ctaPulse 3s ease infinite 2s; font-size: 17px; padding: 18px 52px; }
+    .cta-note { color: rgba(255,255,255,0.3); font-size: 12.5px; }
 
-    /* ══════════════════════════════════════════════════════════════════════
+    /* ══════════════════════════════════════════════════════════════
        FOOTER
-    ══════════════════════════════════════════════════════════════════════ */
+    ══════════════════════════════════════════════════════════════ */
     footer {
-      background: var(--navy); color: white; padding: 64px 24px 32px;
-      border-top: 3px solid var(--zim-gold);
+      background: #040A12; color: white; padding: 72px 28px 36px;
+      border-top: 1px solid rgba(255,255,255,0.05);
     }
     .footer-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px;
+      max-width: 1120px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 52px;
     }
-    .footer-logo { font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 22px; color: white; margin-bottom: 12px; }
+    .footer-logo { font-family: 'Poppins', sans-serif; font-weight: 900; font-size: 22px; color: white; margin-bottom: 10px; }
     .footer-logo span { color: var(--teal); }
-    .footer-zim-flag { display: flex; gap: 0; height: 4px; width: 60px; border-radius: 2px; overflow: hidden; margin-bottom: 16px; }
+    .footer-zim-flag { display: flex; height: 4px; width: 60px; border-radius: 2px; overflow: hidden; margin-bottom: 18px; }
     .footer-zim-flag .f1 { background: var(--zim-green); flex: 1; }
     .footer-zim-flag .f2 { background: var(--zim-gold); flex: 1; }
     .footer-zim-flag .f3 { background: var(--zim-red); flex: 1; }
-    .footer-brand p { color: #94a3b8; font-size: 14px; line-height: 1.75; }
-    .footer-col h4 { color: white; font-size: 12px; font-weight: 700; margin-bottom: 16px; letter-spacing: 1px; text-transform: uppercase; }
-    .footer-links { display: flex; flex-direction: column; gap: 10px; }
-    .footer-links a { color: #64748b; text-decoration: none; font-size: 14px; transition: color 200ms; }
+    .footer-brand p { color: rgba(255,255,255,0.35); font-size: 14px; line-height: 1.8; }
+    .footer-col h4 { color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 700; margin-bottom: 18px; letter-spacing: 1.5px; text-transform: uppercase; }
+    .footer-links { display: flex; flex-direction: column; gap: 12px; }
+    .footer-links a { color: rgba(255,255,255,0.35); text-decoration: none; font-size: 14px; transition: color 0.2s; }
     .footer-links a:hover { color: var(--teal); }
     .zb-badge {
-      background: var(--teal); color: var(--navy);
-      padding: 7px 16px; border-radius: 8px;
-      font-weight: 800; font-size: 13px; display: inline-block; margin-bottom: 12px;
+      background: linear-gradient(135deg, var(--teal), var(--teal-dark));
+      color: white; padding: 8px 18px; border-radius: 10px;
+      font-weight: 800; font-size: 13px; display: inline-block; margin-bottom: 16px;
+      box-shadow: 0 4px 12px var(--teal-glow);
     }
     .footer-copy {
       grid-column: 1/-1;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      padding-top: 24px; margin-top: 8px;
-      color: #334155; font-size: 13px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 28px; margin-top: 8px;
+      color: rgba(255,255,255,0.2); font-size: 13px;
       display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
     }
-
-    /* ══════════════════════════════════════════════════════════════════════
-       RESPONSIVE
-    ══════════════════════════════════════════════════════════════════════ */
     @media (max-width: 768px) {
-      .hero { padding: 72px 20px 64px; }
-      .hero h1 { letter-spacing: -1.5px; }
-      .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 36px; }
       .footer-copy { flex-direction: column; }
-      .pricing-box .price-num { font-size: 64px; }
-      .migrate-box { padding: 36px 22px; }
-      .final-cta { padding: 72px 20px; }
-      .trust-strip { gap: 14px; }
-      .gold-bar { gap: 14px; }
+      .migrate-box { padding: 40px 24px; }
+      .final-cta { padding: 80px 20px; }
     }
-    @media (max-width: 480px) {
-      .nav-login { display: none; }
-      .hero-wallets { gap: 6px; }
-      .wallet-pill { font-size: 12px; padding: 6px 12px; }
-    }
+    @media (max-width: 480px) { .nav-login { display: none; } }
   </style>
 </head>
 <body>
 
-  <!-- ── DECORATIVE SUN SVG definition ──────────────────────────────────── -->
+  <div id="progress-bar"></div>
+
+  <!-- Zimbabwe Sun SVG symbol -->
   <svg style="display:none">
     <symbol id="zim-sun" viewBox="0 0 100 100">
-      <circle cx="50" cy="50" r="20" fill="currentColor"/>
-      <!-- 8 rays -->
+      <circle cx="50" cy="50" r="18" fill="currentColor"/>
       <g fill="currentColor">
-        <rect x="47" y="2" width="6" height="24" rx="3"/>
-        <rect x="47" y="74" width="6" height="24" rx="3"/>
-        <rect x="2" y="47" width="24" height="6" rx="3"/>
-        <rect x="74" y="47" width="24" height="6" rx="3"/>
-        <rect x="16" y="13" width="6" height="24" rx="3" transform="rotate(45 19 25)"/>
-        <rect x="60" y="63" width="6" height="24" rx="3" transform="rotate(45 63 75)"/>
-        <rect x="63" y="13" width="6" height="24" rx="3" transform="rotate(-45 66 25)"/>
-        <rect x="13" y="63" width="6" height="24" rx="3" transform="rotate(-45 16 75)"/>
+        <rect x="47" y="2" width="6" height="22" rx="3"/>
+        <rect x="47" y="76" width="6" height="22" rx="3"/>
+        <rect x="2" y="47" width="22" height="6" rx="3"/>
+        <rect x="76" y="47" width="22" height="6" rx="3"/>
+        <rect x="16" y="14" width="6" height="22" rx="3" transform="rotate(45 19 25)"/>
+        <rect x="60" y="64" width="6" height="22" rx="3" transform="rotate(45 63 75)"/>
+        <rect x="64" y="14" width="6" height="22" rx="3" transform="rotate(-45 67 25)"/>
+        <rect x="14" y="64" width="6" height="22" rx="3" transform="rotate(-45 17 75)"/>
       </g>
     </symbol>
   </svg>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       NAV
-  ══════════════════════════════════════════════════════════════════════ -->
-  <nav>
+  <!-- ══ NAV ══════════════════════════════════════════════════════════════ -->
+  <nav id="main-nav">
     <div class="nav-inner">
       <a href="#" class="logo">
         <span class="logo-name">Interactive<span>Pay</span></span>
@@ -634,20 +796,28 @@
       </a>
       <div class="nav-right">
         <a href="https://payments.interactivecalls.com.au/login" class="nav-login">Log In</a>
-        <a href="https://payments.interactivecalls.com.au/" class="btn-primary" style="padding:9px 20px;font-size:14px" target="_blank">Get Started Free</a>
+        <a href="https://payments.interactivecalls.com.au/" class="btn-primary" style="padding:10px 22px;font-size:14px" target="_blank">Get Started Free</a>
       </div>
     </div>
   </nav>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       HERO
-  ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══ HERO ═════════════════════════════════════════════════════════════ -->
   <div class="hero-wrap">
-    <svg class="hero-sun-left" color="var(--zim-gold)"><use href="#zim-sun"/></svg>
-    <svg class="hero-sun-right" color="var(--teal)"><use href="#zim-sun"/></svg>
-    <section class="hero reveal">
-      <div class="label label-gold">🇿🇼 Built for Zimbabwe's Entrepreneurs</div>
-      <h1>Get Paid <span class="teal">Without</span><br>the Cash <span class="gold">Hassle</span></h1>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <svg class="hero-sun-deco" color="var(--zim-gold)"><use href="#zim-sun"/></svg>
+    <svg class="hero-sun-deco2" color="var(--teal)"><use href="#zim-sun"/></svg>
+    <span class="floating-pill fp-1">EcoCash</span>
+    <span class="floating-pill fp-2">InnBucks</span>
+    <span class="floating-pill fp-3">Visa</span>
+    <span class="floating-pill fp-4">Mastercard</span>
+    <span class="floating-pill fp-5">1Money</span>
+    <span class="floating-pill fp-6">O'mari</span>
+
+    <div class="hero-content">
+      <div class="label label-light">🇿🇼 Built for Zimbabwe's Entrepreneurs</div>
+      <h1 class="hero-h1">Get Paid <span class="teal">Without</span><br>the Cash <span class="gold">Hassle</span></h1>
       <p class="hero-sub">
         Send a payment link. Your customer taps it and pays with EcoCash, InnBucks, 1Money or their bank card.
         The money lands in your account <strong>within seconds</strong> — tracked, receipted, and recorded automatically.
@@ -664,31 +834,57 @@
       <div class="hero-cta">
         <div class="hero-cta-row">
           <a href="https://payments.interactivecalls.com.au/" class="btn-primary" target="_blank">Create My Free Account</a>
-          <a href="mailto:support@interactivecalls.com.au" class="btn-outline">Book a Demo</a>
+          <a href="mailto:support@interactivecalls.com.au" class="btn-ghost">Book a Demo</a>
         </div>
         <small>No card required &middot; Free to start &middot; Live in 5 minutes &middot; Backed by ZB Bank</small>
         <div class="hero-login-link">Already have an account? <a href="https://payments.interactivecalls.com.au/login">Log in →</a></div>
       </div>
-    </section>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num"><span class="counter" data-target="0.5" data-suffix="%" data-decimals="1">0.5%</span></div>
+          <div class="hero-stat-lbl">Per Transaction Only</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num"><span class="counter" data-target="5" data-suffix=" min" data-decimals="0">5 min</span></div>
+          <div class="hero-stat-lbl">Setup Time</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num"><span class="counter" data-target="6" data-suffix="+" data-decimals="0">6+</span></div>
+          <div class="hero-stat-lbl">Payment Methods</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">$0</div>
+          <div class="hero-stat-lbl">Setup &amp; Monthly Fee</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       TRUST STRIP
-  ══════════════════════════════════════════════════════════════════════ -->
-  <div class="trust-strip">
-    <div class="trust-item"><div class="trust-check">✓</div> Secured by ZB Bank</div>
-    <div class="trust-item"><div class="trust-check">✓</div> Funds held in trust</div>
-    <div class="trust-item"><div class="trust-check">✓</div> 24/7 — including Sundays</div>
-    <div class="trust-item"><div class="trust-check">✓</div> Money arrives in seconds</div>
-    <div class="trust-item"><div class="trust-check">✓</div> Only 0.5% per transaction</div>
+  <!-- ══ TRUST STRIP — MARQUEE ════════════════════════════════════════════ -->
+  <div class="trust-strip" aria-hidden="true">
+    <div class="marquee-track">
+      <div class="trust-item"><div class="trust-check">✓</div> Secured by ZB Bank</div><div class="trust-sep">·</div>
+      <div class="trust-item"><div class="trust-check">✓</div> Funds held in trust</div><div class="trust-sep">·</div>
+      <div class="trust-item"><div class="trust-check">✓</div> 24/7 — including Sundays</div><div class="trust-sep">·</div>
+      <div class="trust-item"><div class="trust-check">✓</div> Money arrives in seconds</div><div class="trust-sep">·</div>
+      <div class="trust-item"><div class="trust-check">✓</div> Only 0.5% per transaction</div><div class="trust-sep">·</div>
+      <div class="trust-item"><div class="trust-check">✓</div> No setup fee</div><div class="trust-sep">·</div>
+      <div class="trust-item"><div class="trust-check">✓</div> No monthly charge</div><div class="trust-sep">·</div>
+      <!-- duplicate for seamless loop -->
+      <div class="trust-item"><div class="trust-check">✓</div> Secured by ZB Bank</div><div class="trust-sep">·</div>
+      <div class="trust-item"><div class="trust-check">✓</div> Funds held in trust</div><div class="trust-sep">·</div>
+      <div class="trust-item"><div class="trust-check">✓</div> 24/7 — including Sundays</div><div class="trust-sep">·</div>
+      <div class="trust-item"><div class="trust-check">✓</div> Money arrives in seconds</div><div class="trust-sep">·</div>
+      <div class="trust-item"><div class="trust-check">✓</div> Only 0.5% per transaction</div><div class="trust-sep">·</div>
+      <div class="trust-item"><div class="trust-check">✓</div> No setup fee</div><div class="trust-sep">·</div>
+      <div class="trust-item"><div class="trust-check">✓</div> No monthly charge</div><div class="trust-sep">·</div>
+    </div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       PAIN STORIES
-  ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══ PAIN STORIES ══════════════════════════════════════════════════════ -->
   <section class="pain-section">
     <div class="container">
-      <div class="section-heading reveal">
+      <div class="section-heading rv rv-up">
         <div class="label label-gold">Sound Familiar?</div>
         <h2>Every day in Zimbabwe, sales are lost like this</h2>
         <p>These moments happen to thousands of businesses every week. Every single one is money you should have collected.</p>
@@ -718,13 +914,11 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       BRIDGE
-  ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══ BRIDGE ════════════════════════════════════════════════════════════ -->
   <section class="bridge">
-    <svg class="bridge-sun" color="var(--zim-gold)"><use href="#zim-sun"/></svg>
+    <div class="bridge-line"></div>
     <div class="container">
-      <div class="reveal">
+      <div class="rv rv-up">
         <h2>What if every payment <span class="teal">tracked itself?</span></h2>
         <p>
           Interactive Pay gives you the same professional payment system that big businesses use —
@@ -733,39 +927,37 @@
           The money lands in your account in seconds. A receipt goes to them automatically.
           Your dashboard records everything. <strong>No cash to count. No chasing. No wrong numbers.</strong>
         </p>
-        <a href="https://payments.interactivecalls.com.au/" class="btn-primary" style="font-size:16px;padding:16px 40px" target="_blank">See How It Works →</a>
+        <a href="https://payments.interactivecalls.com.au/" class="btn-primary" style="font-size:16px;padding:17px 44px" target="_blank">See How It Works →</a>
       </div>
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       WHY LOCAL
-  ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══ WHY LOCAL ══════════════════════════════════════════════════════════ -->
   <section class="local-section">
     <div class="container">
-      <div class="section-heading reveal">
+      <div class="section-heading rv rv-up">
         <div class="label label-green">🏠 Made in Zimbabwe, for Zimbabwe</div>
         <h2>Why "local" actually matters</h2>
         <p>Other platforms were built for markets with stable infrastructure and big budgets. Interactive Pay was built specifically for how Zimbabwe's economy works.</p>
       </div>
       <div class="local-grid stagger">
         <div class="local-card">
-          <span class="local-icon">📱</span>
+          <div class="local-icon-wrap">📱</div>
           <h3>Every mobile wallet — natively</h3>
           <p>EcoCash, InnBucks, 1Money, O'mari — all supported natively, not bolted on as an afterthought. Your customers pay with whatever they already use. No new accounts. No friction.</p>
         </div>
         <div class="local-card">
-          <span class="local-icon">🏦</span>
+          <div class="local-icon-wrap">🏦</div>
           <h3>ZB Bank backing</h3>
           <p>Your funds are held in trust by ZB Bank — one of Zimbabwe's most established financial institutions. This is not a startup with no accountability. This is proper banking infrastructure.</p>
         </div>
         <div class="local-card">
-          <span class="local-icon">🤝</span>
+          <div class="local-icon-wrap">🤝</div>
           <h3>Local support team</h3>
           <p>When you need help, you speak to someone who understands Zimbabwe's business landscape — not an overseas bot that doesn't know what EcoCash is or how things work here.</p>
         </div>
         <div class="local-card">
-          <span class="local-icon">💰</span>
+          <div class="local-icon-wrap">💰</div>
           <h3>Priced for the Zim market</h3>
           <p>0.5% per transaction. No monthly fee. No setup cost. We built this for businesses operating at Zimbabwe's real volumes — not Fortune 500 companies with unlimited budgets.</p>
         </div>
@@ -773,12 +965,10 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       PAYMENT METHODS
-  ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══ PAYMENT METHODS ════════════════════════════════════════════════════ -->
   <section class="payments-section">
     <div class="container">
-      <div class="section-heading reveal">
+      <div class="section-heading rv rv-up">
         <div class="label label-teal">Payment Methods</div>
         <h2>Every payment method your customers already use</h2>
         <p>Your customer pays with whatever is on their phone. No one needs to download anything new or create a new account.</p>
@@ -830,52 +1020,51 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       HOW IT WORKS
-  ══════════════════════════════════════════════════════════════════════ -->
-  <section class="how-section">
+  <!-- ══ HOW IT WORKS ═══════════════════════════════════════════════════════ -->
+  <section class="how-section" id="how">
     <div class="container">
-      <div class="section-heading reveal">
+      <div class="section-heading rv rv-up">
         <div class="label label-teal">How It Works</div>
         <h2>Four steps. Less time than a phone call.</h2>
         <p>No developer needed. No tech degree required. Just five minutes and you're collecting payments professionally.</p>
       </div>
-      <div class="steps stagger">
-        <div class="step-item">
-          <div class="step-num">1</div>
-          <h3>Create your free account</h3>
-          <p>Visit Interactive Pay and sign up. No credit card. No setup fee. Your account is ready in under five minutes — guaranteed.</p>
-        </div>
-        <div class="step-item">
-          <div class="step-num">2</div>
-          <h3>Generate your payment link</h3>
-          <p>From your dashboard, create a link for any amount. Or set up a recurring link for subscriptions and repeat customers. Name it whatever makes sense.</p>
-        </div>
-        <div class="step-item">
-          <div class="step-num">3</div>
-          <h3>Share it anywhere</h3>
-          <p>Send it on WhatsApp, Facebook, SMS or email. Put it in your Instagram bio. Add it to your website. Wherever your customers are, your link works.</p>
-        </div>
-        <div class="step-item">
-          <div class="step-num">4</div>
-          <h3>Get paid instantly</h3>
-          <p>Your customer taps the link, pays with their preferred method, and money arrives in your account within seconds. A receipt goes to them automatically.</p>
+      <div class="steps-wrap">
+        <div class="steps-connector rv rv-scale"></div>
+        <div class="steps stagger">
+          <div class="step-item">
+            <div class="step-num-wrap">1</div>
+            <h3>Create your free account</h3>
+            <p>Visit Interactive Pay and sign up. No credit card. No setup fee. Your account is ready in under five minutes — guaranteed.</p>
+          </div>
+          <div class="step-item">
+            <div class="step-num-wrap">2</div>
+            <h3>Generate your payment link</h3>
+            <p>From your dashboard, create a link for any amount. Or set up a recurring link for subscriptions and repeat customers. Name it whatever makes sense.</p>
+          </div>
+          <div class="step-item">
+            <div class="step-num-wrap">3</div>
+            <h3>Share it anywhere</h3>
+            <p>Send it on WhatsApp, Facebook, SMS or email. Put it in your Instagram bio. Add it to your website. Wherever your customers are, your link works.</p>
+          </div>
+          <div class="step-item">
+            <div class="step-num-wrap">4</div>
+            <h3>Get paid instantly</h3>
+            <p>Your customer taps the link, pays with their preferred method, and money arrives in your account within seconds. A receipt goes to them automatically.</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       PRICING
-  ══════════════════════════════════════════════════════════════════════ -->
-  <section class="pricing-section">
+  <!-- ══ PRICING ════════════════════════════════════════════════════════════ -->
+  <section class="pricing-section" id="pricing">
     <div class="container">
-      <div class="section-heading reveal">
+      <div class="section-heading rv rv-up">
         <div class="label label-gold">Pricing</div>
         <h2>Completely transparent. No surprises.</h2>
         <p>No fine print. No monthly fee buried on page 3. No contract. Just one honest number.</p>
       </div>
-      <div class="pricing-layout reveal">
+      <div class="pricing-layout rv rv-up">
         <div class="pricing-box">
           <div class="price-num">0.5%</div>
           <div class="price-label">per transaction</div>
@@ -903,17 +1092,15 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       COMPARISON TABLE
-  ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══ COMPARISON ═════════════════════════════════════════════════════════ -->
   <section class="compare-section">
     <div class="container">
-      <div class="section-heading reveal">
+      <div class="section-heading rv rv-up">
         <div class="label label-gold">Already Using Another Platform?</div>
         <h2>Side by side — the difference is clear</h2>
         <p>If you're on another gateway and watching fees chip away at every transaction, it's time to do the maths.</p>
       </div>
-      <div class="compare-table reveal">
+      <div class="compare-table rv rv-up">
         <div class="compare-header">
           <div>Feature</div>
           <div>InteractivePay</div>
@@ -934,34 +1121,32 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       SECURITY
-  ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══ SECURITY ═══════════════════════════════════════════════════════════ -->
   <section class="security-section">
     <div class="container">
-      <div class="section-heading reveal">
+      <div class="section-heading rv rv-up">
         <div class="label label-teal">Security &amp; Trust</div>
         <h2>Your money is safe. This is real banking.</h2>
         <p>This isn't a startup with a good website. Interactive Pay is powered by ZB Bank — one of Zimbabwe's most established financial institutions.</p>
       </div>
       <div class="security-grid stagger">
         <div class="security-card">
-          <span class="icon">🏦</span>
+          <div class="security-icon-wrap">🏦</div>
           <h3>ZB Bank holds your funds</h3>
-          <p>All funds are held in trust by ZB Bank until transferred to your nominated account. Proper banking, proper accountability — not a random app wallet.</p>
+          <p>All funds are held in trust by ZB Bank until transferred to your nominated account. Proper banking, proper accountability.</p>
         </div>
         <div class="security-card">
-          <span class="icon">🔒</span>
+          <div class="security-icon-wrap">🔒</div>
           <h3>Bank-grade encryption</h3>
-          <p>Every transaction is encrypted using the same security standards as online banking. Your customers' payment details are never exposed or stored insecurely.</p>
+          <p>Every transaction is encrypted using the same security standards as online banking. Your customers' payment details are never exposed.</p>
         </div>
         <div class="security-card">
-          <span class="icon">📋</span>
+          <div class="security-icon-wrap">📋</div>
           <h3>Full audit trail</h3>
           <p>Every payment is recorded with a timestamp, amount, payer, and confirmation. You have a complete financial record at all times — for you and for ZIMRA.</p>
         </div>
         <div class="security-card">
-          <span class="icon">⚡</span>
+          <div class="security-icon-wrap">⚡</div>
           <h3>Real-time notifications</h3>
           <p>You get notified the moment a payment lands — by WhatsApp and in your dashboard. You'll know before you even put your phone down.</p>
         </div>
@@ -969,16 +1154,14 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       BUSINESS TYPES
-  ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══ BUSINESS TYPES ═════════════════════════════════════════════════════ -->
   <section class="biz-section">
     <div class="container">
-      <div class="reveal">
+      <div class="rv rv-up">
         <div class="label label-gold">Who Uses InteractivePay?</div>
         <h2>Businesses across Zimbabwe are already getting paid</h2>
       </div>
-      <div class="biz-tags reveal" style="margin-top:24px">
+      <div class="biz-tags stagger" style="margin-top:28px">
         <span class="biz-tag">Schools &amp; Colleges</span>
         <span class="biz-tag">Clothing Shops</span>
         <span class="biz-tag">Market Vendors</span>
@@ -998,47 +1181,61 @@
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       FAQ
-  ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══ FAQ ════════════════════════════════════════════════════════════════ -->
   <section class="faq-section">
     <div class="container">
-      <div class="section-heading reveal">
+      <div class="section-heading rv rv-up">
         <div class="label label-teal">FAQ</div>
         <h2>Questions you probably have</h2>
       </div>
-      <div class="faq-grid stagger">
+      <div class="faq-list rv rv-up">
         <div class="faq-item">
-          <h3><span class="faq-q">Q</span> Is it safe?</h3>
-          <p>Yes. Interactive Pay is powered by ZB Bank, one of Zimbabwe's most trusted financial institutions. Your funds are held in trust and protected by bank-grade security standards.</p>
+          <button class="faq-q-btn" aria-expanded="false">
+            <span class="faq-q-text">Is it safe?</span>
+            <span class="faq-arrow">+</span>
+          </button>
+          <div class="faq-body"><p>Yes. Interactive Pay is powered by ZB Bank, one of Zimbabwe's most trusted financial institutions. Your funds are held in trust and protected by bank-grade security standards.</p></div>
         </div>
         <div class="faq-item">
-          <h3><span class="faq-q">Q</span> How fast does money arrive?</h3>
-          <p>Within seconds of a successful payment. You receive a WhatsApp notification and see it in your dashboard immediately — before your customer has even put their phone away.</p>
+          <button class="faq-q-btn" aria-expanded="false">
+            <span class="faq-q-text">How fast does money arrive?</span>
+            <span class="faq-arrow">+</span>
+          </button>
+          <div class="faq-body"><p>Within seconds of a successful payment. You receive a WhatsApp notification and see it in your dashboard immediately — before your customer has even put their phone away.</p></div>
         </div>
         <div class="faq-item">
-          <h3><span class="faq-q">Q</span> What payment methods are accepted?</h3>
-          <p>EcoCash, InnBucks, 1Money, O'mari, Visa, and Mastercard. Your customers pay with whatever wallet or card they already use — no new accounts, no app downloads.</p>
+          <button class="faq-q-btn" aria-expanded="false">
+            <span class="faq-q-text">What payment methods are accepted?</span>
+            <span class="faq-arrow">+</span>
+          </button>
+          <div class="faq-body"><p>EcoCash, InnBucks, 1Money, O'mari, Visa, and Mastercard. Your customers pay with whatever wallet or card they already use — no new accounts, no app downloads.</p></div>
         </div>
         <div class="faq-item">
-          <h3><span class="faq-q">Q</span> Do I need a developer to set it up?</h3>
-          <p>No. You can create an account and generate payment links yourself in minutes. If you want it integrated into your existing website or system, our team offers a paid setup service.</p>
+          <button class="faq-q-btn" aria-expanded="false">
+            <span class="faq-q-text">Do I need a developer to set it up?</span>
+            <span class="faq-arrow">+</span>
+          </button>
+          <div class="faq-body"><p>No. You can create an account and generate payment links yourself in minutes. If you want it integrated into your existing website or system, our team offers a paid setup service.</p></div>
         </div>
         <div class="faq-item">
-          <h3><span class="faq-q">Q</span> Where does my money go?</h3>
-          <p>Funds are held in trust by ZB Bank and transferred to your nominated account — which can be a bank account or mobile wallet, depending on what works best for your business.</p>
+          <button class="faq-q-btn" aria-expanded="false">
+            <span class="faq-q-text">Where does my money go?</span>
+            <span class="faq-arrow">+</span>
+          </button>
+          <div class="faq-body"><p>Funds are held in trust by ZB Bank and transferred to your nominated account — which can be a bank account or mobile wallet, depending on what works best for your business.</p></div>
         </div>
         <div class="faq-item">
-          <h3><span class="faq-q">Q</span> What if I need help?</h3>
-          <p>Our local support team is ready to assist. We understand Zimbabwe's business landscape and will help you get set up and running without any confusion or overseas call centres.</p>
+          <button class="faq-q-btn" aria-expanded="false">
+            <span class="faq-q-text">What if I need help?</span>
+            <span class="faq-arrow">+</span>
+          </button>
+          <div class="faq-body"><p>Our local support team is ready to assist. We understand Zimbabwe's business landscape and will help you get set up and running without any confusion or overseas call centres.</p></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       GOLD TRUST BAR
-  ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══ GOLD TRUST BAR ═════════════════════════════════════════════════════ -->
   <div class="gold-bar">
     <div class="trust-item"><div class="trust-check">✓</div> Secured by ZB Bank</div>
     <div class="trust-item"><div class="trust-check">✓</div> Funds held in trust</div>
@@ -1047,12 +1244,10 @@
     <div class="trust-item"><div class="trust-check">✓</div> Only 0.5% per transaction</div>
   </div>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       MIGRATION & RISK REVERSAL
-  ══════════════════════════════════════════════════════════════════════ -->
-  <section class="migrate-section" style="padding-top:80px">
+  <!-- ══ MIGRATION & RISK ═══════════════════════════════════════════════════ -->
+  <section class="migrate-section">
     <div class="container">
-      <div class="migrate-box reveal">
+      <div class="migrate-box rv rv-up">
         <h2>We'll do the heavy lifting</h2>
         <p>
           Worried about switching from another platform? Or want Interactive Pay integrated into your existing online store?
@@ -1060,36 +1255,32 @@
           One consultation call. We handle the rest. You don't figure it out alone.
         </p>
         <div class="migrate-ctas">
-          <a href="https://payments.interactivecalls.com.au/" class="btn-primary" style="font-size:16px;padding:15px 36px" target="_blank">Start Free Myself</a>
-          <a href="mailto:support@interactivecalls.com.au" class="btn-outline" style="color:white;border-color:rgba(255,255,255,0.3)">Book Integration Help</a>
+          <a href="https://payments.interactivecalls.com.au/" class="btn-primary" style="font-size:16px;padding:16px 40px" target="_blank">Start Free Myself</a>
+          <a href="mailto:support@interactivecalls.com.au" class="btn-ghost">Book Integration Help</a>
         </div>
       </div>
-      <div class="risk-box reveal">
+      <div class="risk-box rv rv-up">
         <h3>No lock-in. No contract. No commitment.</h3>
         <p>Start free. Run both platforms side by side if you want. Switch fully when you're ready. If you ever want to leave — you can. No questions asked.<br><em style="color:var(--text-light);font-size:13px">(You won't want to.)</em></p>
       </div>
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       FINAL CTA
-  ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══ FINAL CTA ═══════════════════════════════════════════════════════════ -->
   <section class="final-cta">
     <svg class="final-cta-sun" color="var(--zim-gold)"><use href="#zim-sun"/></svg>
     <div class="container">
-      <div class="cta-stack reveal">
-        <div class="label label-gold" style="font-size:12px;padding:6px 18px">🇿🇼 Free to Start · Backed by ZB Bank</div>
+      <div class="cta-stack rv rv-up">
+        <div class="label label-light">🇿🇼 Free to Start · Backed by ZB Bank</div>
         <h2>Ready to leave<br>the <span class="teal">cash</span> behind?</h2>
         <p>Zimbabwe's entrepreneurs are getting paid faster, safer, and smarter. It starts with a free account and takes five minutes.</p>
-        <a href="https://payments.interactivecalls.com.au/" class="btn-primary" style="font-size:17px;padding:18px 48px" target="_blank">Create My Free Account →</a>
+        <a href="https://payments.interactivecalls.com.au/" class="btn-primary" target="_blank">Create My Free Account →</a>
         <p class="cta-note">No setup fee &middot; No monthly charge &middot; Cancel anytime &middot; 0.5% per transaction only &middot; Backed by ZB Bank</p>
       </div>
     </div>
   </section>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       FOOTER
-  ══════════════════════════════════════════════════════════════════════ -->
+  <!-- ══ FOOTER ══════════════════════════════════════════════════════════════ -->
   <footer>
     <div class="footer-inner">
       <div class="footer-brand">
@@ -1125,19 +1316,61 @@
     </div>
   </footer>
 
-  <!-- ══════════════════════════════════════════════════════════════════════
-       SCRIPTS
-  ══════════════════════════════════════════════════════════════════════ -->
   <script>
+    // ── Scroll progress bar ──────────────────────────────────────────────────
+    const bar = document.getElementById('progress-bar');
+    window.addEventListener('scroll', () => {
+      const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+      bar.style.width = Math.min(pct, 100) + '%';
+    }, { passive: true });
+
+    // ── Nav glass on scroll ──────────────────────────────────────────────────
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    // ── Scroll reveal ────────────────────────────────────────────────────────
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
-        }
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('in'); observer.unobserve(e.target); }
       });
-    }, { threshold: 0.08, rootMargin: '-30px' });
-    document.querySelectorAll('.reveal, .stagger').forEach(el => observer.observe(el));
+    }, { threshold: 0.08, rootMargin: '-20px' });
+    document.querySelectorAll('.rv, .stagger').forEach(el => observer.observe(el));
+
+    // ── FAQ accordion ────────────────────────────────────────────────────────
+    document.querySelectorAll('.faq-q-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+        btn.setAttribute('aria-expanded', !isOpen);
+      });
+    });
+
+    // ── Counter animation ────────────────────────────────────────────────────
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        const target = parseFloat(el.dataset.target);
+        const suffix = el.dataset.suffix || '';
+        const decimals = parseInt(el.dataset.decimals) || 0;
+        const duration = 1800;
+        let start = null;
+        const step = (ts) => {
+          if (!start) start = ts;
+          const progress = Math.min((ts - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          el.textContent = (eased * target).toFixed(decimals) + suffix;
+          if (progress < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+        counterObserver.unobserve(el);
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('.counter').forEach(el => counterObserver.observe(el));
   </script>
 </body>
 </html>
